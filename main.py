@@ -1,5 +1,6 @@
 import pygame as pg
-from constants import SCREEN_WIDTH, SCREEN_HEIGHT
+
+from constants import SCREEN_HEIGHT, SCREEN_WIDTH
 from player import Player
 
 
@@ -13,6 +14,11 @@ def main():
     time_obj = pg.time.Clock()
     dt = 0
 
+    # pygame groups
+    updatable = pg.sprite.Group()
+    drawable = pg.sprite.Group()
+    Player.containers = (updatable, drawable)
+
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
 
     while True:
@@ -20,10 +26,12 @@ def main():
             if event.type == pg.QUIT:
                 return
 
-        player.update(dt)
+        for obj in updatable:
+            obj.update(dt)
 
         screen.fill("black")
-        player.draw(screen)
+        for obj in drawable:
+            obj.draw(screen)
         pg.display.flip()
 
         # FPS limit to 60
